@@ -8,13 +8,21 @@ Die Datenbanken sind in CSV-Dateien gespeichert und bestehen aus einer Tabelle p
 
 ## Installation
 
-Einfach die Datei einmal mit Python ausführen:
+Mit `setuptools` das Paket installieren:
 
 ```python3
-python dbfa.py
+python setup.py install
 ```
 
-oder `initialize()` aufrufen.
+und dann im Projekt mit
+
+```
+from dbfa import dbfa
+
+print(str(dbfa.initialize()))
+```
+
+initialisieren.
 
 ## Funktionen
 
@@ -30,13 +38,19 @@ The databases are stored in CSV files and consist of one table per file.
 
 ## Installation
 
-Just run the file once with Python:
+Install the package with `setuptools`
 
 ```python3
-python dbfa.py
+python setup.py install
 ```
 
-or call `initialize()`.
+and initialize in the project with
+
+```
+from dbfa import dbfa
+
+print(str(dbfa.initialize()))
+```
 
 ## Functionality
 
