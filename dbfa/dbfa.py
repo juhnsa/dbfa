@@ -47,10 +47,13 @@ def create_db(database, table):
     """
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
-    with open(os.path.join(config['database']['directory'], database), 'a', newline='', encoding='utf-8') as csvfile:
-        writer = csv.writer(csvfile, delimiter='|')
-        writer.writerow(table)
-        return table
+    try:
+        with open(os.path.join(config['database']['directory'], database), 'x', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile, delimiter='|')
+            writer.writerow(table)
+            return True, table
+    except FileExistsError:
+        return False, 'File already exists'
 
 def delete_db(database):
     """
@@ -91,9 +94,9 @@ def query_db(database, query, column=0):
             entries = list(csv.reader(csvfile, delimiter='|'))
             for entry in entries:
                 if entry[column] == query:
-                    return entry
+                    return True, entry
     except FileNotFoundError:
-        pass
+        return False, 'File not found'
 
 def add_entry(database, entry):
     """
@@ -112,9 +115,9 @@ def add_entry(database, entry):
         with open(os.path.join(config['database']['directory'], database), 'a', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile, delimiter='|')
             writer.writerow(entry)
-            return entry
+            return True, entry
     except FileNotFoundError:
-        pass
+        return False, 'File not found'
 
 def update_entry(database, old_entry, new_entry):
     """
@@ -144,9 +147,9 @@ def update_entry(database, old_entry, new_entry):
             writer = csv.writer(csvfile, delimiter='|')
             writer.writerows(new_db)
 
-        return new_entry
+        return True, new_entry
     except FileNotFoundError:
-        pass
+        return False, 'File not found'
 
 def remove_entry(database, entry):
     """
@@ -173,13 +176,6 @@ def remove_entry(database, entry):
             writer = csv.writer(csvfile, delimiter='|')
             writer.writerows(new_db)
 
-        return entry
+        return True, entry
     except FileNotFoundError:
-        pass
-
-if __name__ == '__main__':
-    init = initialize()
-    if init[0]:
-        print(init[1])
-    else:
-        print(init[1])
+        return False, 'File not found'
