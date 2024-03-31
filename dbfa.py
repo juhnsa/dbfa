@@ -107,3 +107,10 @@ def remove_entry(database, entry):
         return entry
     except FileNotFoundError:
         pass
+
+if __name__ == '__main__':
+    init = initialize()
+    if init[0]:
+        print(init[1])
+    else:
+        print(init[1])
