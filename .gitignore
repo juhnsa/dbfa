@@ -1,6 +1,6 @@
-.venv
 __pycache__
-dist/
-*.egg-info/
-build
 .pytest_cache
+.venv
+build
+dist
+dbfa.egg-info
