@@ -1,4 +1,4 @@
-# Database for the poor
+""" A simple csv database file manager, using python's csv, configparser, and os module. """
 import csv
 import configparser
 import os
@@ -10,19 +10,33 @@ directory = ./db/
 """
 
 def create_if_not_exists(filename, path, contents):
+    """
+    Creates a file with the given filename in the specified path if it does not already exist.
+    
+    Parameters:
+        filename (str): The name of the file to be created.
+        path (str): The path where the file should be created.
+        contents (str): The contents to be written to the file.
+    
+    Returns:
+        None: If the file already exists.
+        None: If the file is successfully created.
+    """
     try:
-        with open(path + filename) as f:
+        with open(path + filename, encoding='utf-8') as f:
             return
     except IOError:
-        with open(path + filename, 'w') as f:
+        with open(path + filename, 'w', encoding='utf-8') as f:
             f.write(contents)
 
 def initialize():
     """
-    Initializes the dbfa by checking if it has been initialized before and creating necessary files and directories.
-    
+    Initializes the dbfa by checking if it has been initialized 
+    before and creating necessary files and directories.
+
     Returns:
-        A tuple containing a boolean indicating whether the initialization was successful and a string message.
+        A tuple containing a boolean indicating whether the 
+        initialization was successful and a string message.
     """
     try:
         create_if_not_exists('.dbfa_initialized', './', '')
@@ -31,8 +45,8 @@ def initialize():
         config.read(CONFIG_FILE)
         os.makedirs(config['database']['directory'], exist_ok=True)
         return True, 'dbfa initialized'
-    except Exception as e:
-        return False, f'dfba initialization failed with error: {e}'
+    except IOError as e:
+        return False, f'dbfa initialization failed with error {e}'
 
 def create_db(database, table):
     """
@@ -48,7 +62,8 @@ def create_db(database, table):
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
     try:
-        with open(os.path.join(config['database']['directory'], database), 'x', newline='', encoding='utf-8') as csvfile:
+        db_dir = config['database']['directory']
+        with open(os.path.join(db_dir, database), 'x', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile, delimiter='|')
             writer.writerow(table)
             return True, table
@@ -63,9 +78,12 @@ def delete_db(database):
         database (str): The name of the database file to be deleted.
 
     Returns:
-        tuple: A tuple containing a boolean indicating the success of the deletion and the name of the deleted database file.
-            - If the deletion is successful, the boolean value is True and the name of the deleted database file is returned.
-            - If the deletion fails because the file is not found, the boolean value is False and the name of the deleted database file is returned.
+        tuple: A tuple containing a boolean indicating the success of the 
+            database deletion and the name of the deleted database file.
+            - If the deletion is successful, the boolean value is True 
+            and the name of the deleted database file is returned.
+            - If the deletion fails because the file is not found, 
+            the boolean value is False and the name of the deleted database file is returned.
     """
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
@@ -90,7 +108,8 @@ def query_db(database, query, column=0):
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
     try:
-        with open(os.path.join(config['database']['directory'], database), newline='', encoding='utf-8') as csvfile:
+        db_dir = config['database']['directory']
+        with open(os.path.join(db_dir, database), newline='', encoding='utf-8') as csvfile:
             entries = list(csv.reader(csvfile, delimiter='|'))
             for entry in entries:
                 if entry[column] == query:
@@ -112,7 +131,8 @@ def add_entry(database, entry):
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
     try:
-        with open(os.path.join(config['database']['directory'], database), 'a', newline='', encoding='utf-8') as csvfile:
+        db_dir = config['database']['directory']
+        with open(os.path.join(db_dir, database), 'a', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile, delimiter='|')
             writer.writerow(entry)
             return True, entry
@@ -134,7 +154,8 @@ def update_entry(database, old_entry, new_entry):
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
     try:
-        with open(os.path.join(config['database']['directory'], database), 'r', newline='', encoding='utf-8') as csvfile:
+        db_dir = config['database']['directory']
+        with open(os.path.join(db_dir, database), 'r', newline='', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile, delimiter='|')
             new_db = []
             for row in reader:
@@ -143,7 +164,7 @@ def update_entry(database, old_entry, new_entry):
                 else:
                     new_db.append(row)
 
-        with open(os.path.join(config['database']['directory'], database), 'w', newline='', encoding='utf-8') as csvfile:
+        with open(os.path.join(db_dir, database), 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile, delimiter='|')
             writer.writerows(new_db)
 
@@ -165,14 +186,15 @@ def remove_entry(database, entry):
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
     try:
-        with open(os.path.join(config['database']['directory'], database), 'r', newline='', encoding='utf-8') as csvfile:
+        db_dir = config['database']['directory']
+        with open(os.path.join(db_dir, database), 'r', newline='', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile, delimiter='|')
             new_db = []
             for row in reader:
                 if row != entry:
                     new_db.append(row)
 
-        with open(os.path.join(config['database']['directory'], database), 'w', newline='', encoding='utf-8') as csvfile:
+        with open(os.path.join(db_dir, database), 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile, delimiter='|')
             writer.writerows(new_db)
 
