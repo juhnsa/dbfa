@@ -1,5 +1,7 @@
 *There is an English section for dbfa in this README. [View](#databases-for-the-poor-dbfa-english)*
 
+![pylint workflow](https://github.com/juhnsa/dbfa/actions/workflows/pylint.yml/badge.svg)
+
 # Datenbanken für Arme (dbfa)
 
 dbfa ist ein einfaches Datenbanksystem, das ausschließlich aus Python-Bibliotheken besteht.
