@@ -1,3 +1,6 @@
+[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pylint-dev/pylint)
+![pylint workflow](https://github.com/juhnsa/dbfa/actions/workflows/pylint.yml/badge.svg)
+
 # dbfa.py - Einfache CSV-Datenbank-Verwaltung
 
 dbfa.py ist eine einfache CSV-Datenbank-Verwaltung. Es verwaltet CSV-Dateien
