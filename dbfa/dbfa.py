@@ -46,8 +46,8 @@ def initialize():
         config.read(CONFIG_FILE)
         os.makedirs(config['database']['directory'], exist_ok=True)
         return True, 'dbfa initialized'
-    except IOError as e:
-        return False, f'dbfa initialization failed with error {e}'
+    except IOError:
+        return False, 'Failed to initialize dbfa'
 
 def create_db(database, table):
     """
@@ -67,9 +67,9 @@ def create_db(database, table):
         with open(os.path.join(db_dir, database), 'x', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile, delimiter='|')
             writer.writerow(table)
-            return True, table
+        return True, table
     except FileExistsError:
-        return False, 'File already exists'
+        return False, table
 
 def delete_db(database):
     """
@@ -115,8 +115,9 @@ def query_db(database, query, column=0):
             for entry in entries:
                 if entry[column] == query:
                     return True, entry
+                return False, query
     except FileNotFoundError:
-        return False, 'File not found'
+        return False, query
 
 def add_entry(database, entry):
     """
@@ -138,7 +139,7 @@ def add_entry(database, entry):
             writer.writerow(entry)
             return True, entry
     except FileNotFoundError:
-        return False, 'File not found'
+        return False, entry
 
 def update_entry(database, old_entry, new_entry):
     """
@@ -171,7 +172,7 @@ def update_entry(database, old_entry, new_entry):
 
         return True, new_entry
     except FileNotFoundError:
-        return False, 'File not found'
+        return False, new_entry
 
 def remove_entry(database, entry):
     """
@@ -201,4 +202,4 @@ def remove_entry(database, entry):
 
         return True, entry
     except FileNotFoundError:
-        return False, 'File not found'
+        return False, entry
