@@ -1,3 +1,4 @@
+""" Setup file for dbfa. """
 from setuptools import setup, find_packages
 
 setup(
