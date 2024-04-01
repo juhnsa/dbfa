@@ -19,15 +19,16 @@ def create_if_not_exists(filename, path, contents):
         contents (str): The contents to be written to the file.
     
     Returns:
-        None: If the file already exists.
-        None: If the file is successfully created.
+        A tuple containing a boolean indicating whether the 
+        file was created successfully and a string message.
     """
     try:
         with open(path + filename, encoding='utf-8') as f:
-            return
+            return True, 'File already exists'
     except IOError:
         with open(path + filename, 'w', encoding='utf-8') as f:
             f.write(contents)
+            return True, 'File created'
 
 def initialize():
     """
